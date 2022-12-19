@@ -1,0 +1,38 @@
+<!-- Wappler include head-page="layouts/main" fontawesome_5="cdn" bootstrap5="local" is="dmx-app" id="index" appConnect="local" -->
+<dmx-serverconnect id="users" url="/api/queryUsers"></dmx-serverconnect>
+<dmx-serverconnect id="loadgrid" url="/api/loadgrid" dmx-on:done="run({run:{action:`loadGrid_frm_db.run()`}})"></dmx-serverconnect>
+<script is="dmx-flow" id="loadGrid_frm_db" type="text/dmx-flow">{
+  runJS: {
+    function: "load",
+    args: ["{{loadgrid.data.query.position_new}}"],
+    output: true
+  }
+}</script>
+<form id="gridUpdateForm" is="dmx-serverconnect-form" method="post" action="/api/gridUpdate">
+    <input id="positionInput" name="positionInput" type="text" class="form-control">
+</form>
+<div class="container mt-3 ">
+    <div class="row grid-stack">
+        <div class="col grid-stack-item ui-draggable ui-resizable ui-resizable-autohide" gs-x="0" gs-y="4" gs-w="6" gs-h="6">
+            <div class="grid-stack-item-content">
+                <div class="row" is="dmx-repeat" id="repeat_users" dmx-bind:repeat="users.data.query">
+                    <div class="col-4">
+                        <img src="" alt="" dmx-bind:src="avatar" height="50" width="50">
+                        <p>{{name}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col grid-stack-item ui-draggable ui-resizable ui-resizable-autohide" gs-x="6" gs-y="4" gs-w="6" gs-h="6">
+            <div class="grid-stack-item-content">Item 2 wider</div>
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col">
+            <button id="btn1" class="btn" onclick="save()">Button</button>
+            <button id="btn2" class="btn btn-primary" onclick="load()">load</button>
+        </div>
+    </div>
+</div>
+<meta name="ac:route" content="/">

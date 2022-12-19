@@ -1,0 +1,85 @@
+{
+  "meta": {
+    "$_GET": [
+      {
+        "type": "text",
+        "name": "sort"
+      },
+      {
+        "type": "text",
+        "name": "dir"
+      }
+    ],
+    "$_POST": [
+      {
+        "type": "text",
+        "name": "positionInput"
+      }
+    ]
+  },
+  "exec": {
+    "steps": [
+      {
+        "name": "delete",
+        "module": "dbupdater",
+        "action": "delete",
+        "options": {
+          "connection": "db",
+          "sql": {
+            "type": "delete",
+            "table": "windowPositions",
+            "returning": "id",
+            "query": "DELETE\nFROM windowPositions",
+            "params": []
+          }
+        },
+        "meta": [
+          {
+            "name": "affected",
+            "type": "number"
+          }
+        ]
+      },
+      {
+        "name": "insert",
+        "module": "dbupdater",
+        "action": "insert",
+        "options": {
+          "connection": "db",
+          "sql": {
+            "type": "insert",
+            "values": [
+              {
+                "table": "windowPositions",
+                "column": "position_new",
+                "type": "text",
+                "value": "{{$_POST.positionInput}}"
+              }
+            ],
+            "table": "windowPositions",
+            "returning": "id",
+            "query": "INSERT INTO windowPositions\n(position_new) VALUES (:P1 /* {{$_POST.positionInput}} */)",
+            "params": [
+              {
+                "name": ":P1",
+                "type": "expression",
+                "value": "{{$_POST.positionInput}}",
+                "test": ""
+              }
+            ]
+          }
+        },
+        "meta": [
+          {
+            "name": "identity",
+            "type": "text"
+          },
+          {
+            "name": "affected",
+            "type": "number"
+          }
+        ]
+      }
+    ]
+  }
+}
